@@ -1,0 +1,13 @@
+alembic
+asyncpg
+async-sqlalchemy
+asyncio
+greenlet
+fastapi
+fastapi-filter[sqlalchemy]
+psycopg2-binary
+pydantic
+pydantic_settings
+python-dotenv
+sqlalchemy
+uvicorn[standard]
