@@ -4,6 +4,8 @@ Messenger FastAPI app.
 
 from fastapi import FastAPI
 
+import messenger.app.exceptions as exceptions
+from messenger.core.exceptions import ExceptionHandler
 from messenger.routers.api import api_router
 from messenger.routers.metadata import metadata
 
@@ -18,10 +20,29 @@ class Messenger:
             openapi_tags=metadata,
         )
         self.init_routers()
+        self.init_exception_handlers()
 
 
     def init_routers(self):
         self._app.include_router(api_router, prefix="/api")
+
+
+    def init_exception_handlers(self):
+        self.app.add_exception_handler(
+            exceptions.BadRequestException, ExceptionHandler.handle
+        )
+        self.app.add_exception_handler(
+            exceptions.NotFoundException, ExceptionHandler.handle
+        )
+        self.app.add_exception_handler(
+            exceptions.ServerErrorException, ExceptionHandler.handle
+        )
+        self.app.add_exception_handler(
+            exceptions.UnprocessableEntityException, ExceptionHandler.handle
+        )
+        self.app.add_exception_handler(
+            exceptions.UnauthorizedException, ExceptionHandler.handle
+        )
 
 
     @property
@@ -42,4 +63,3 @@ async def init_models():
 @messenger.on_event("startup")
 async def on_startup():
     await init_models()
-

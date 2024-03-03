@@ -68,7 +68,7 @@ async def get_thread_by_id(
     "/{id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Deletes a thread by id.",
-    tags=["users"]
+    tags=["threads"]
 )
 async def delete_thread_by_id(
     id: UUID,

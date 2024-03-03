@@ -44,6 +44,5 @@ Three SQLAlchemy ORM models have been implemented to represent: User, Message an
 2. Docker
 3. Alembic 
 4. messages + threads 
-5. auth? 
 6. PyTests 
 7. Redis cache

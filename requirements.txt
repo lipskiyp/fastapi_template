@@ -11,3 +11,7 @@ pydantic_settings
 python-dotenv
 sqlalchemy
 uvicorn[standard]
+passlib
+python-jose
+python-jose[cryptography]>
+python-multipart

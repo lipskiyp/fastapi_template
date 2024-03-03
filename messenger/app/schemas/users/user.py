@@ -14,6 +14,8 @@ class UserCreateSchema(BaseModel):
     username: str 
     firstname: str
     secondname: str 
+    password: str
+    password_confirm: str
 
 
 class UserResponseSchema(BaseModel):

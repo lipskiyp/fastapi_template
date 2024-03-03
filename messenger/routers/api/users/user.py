@@ -5,14 +5,18 @@ Users FastAPI router.
 from fastapi import APIRouter, Depends, status
 from fastapi_filter import FilterDepends
 from fastapi_filter.contrib.sqlalchemy import Filter
+from fastapi.security import OAuth2PasswordRequestForm
 from typing import List, Optional
 from uuid import UUID 
 
 from messenger.app.controllers import UserController
+from messenger.app.dependencies.authentication import get_current_active_user
+from messenger.app.exceptions import UnauthorizedException
 from messenger.app.factories.controllers import ControllerFactory
 from messenger.app.filters import UserFilter
+from messenger.app.models import User
 from messenger.app.schemas import (
-    UserCreateSchema, UserResponseSchema, UserUpdateSchema
+    UserCreateSchema, UserResponseSchema, UserUpdateSchema, TokenCreateSchema
 )
 
 
@@ -34,9 +38,43 @@ async def create_user(
     """
     Creates and returns new users.
     """
-    return await controller.create(
+    return await controller.create_user(
         **request.model_dump()
     )
+
+
+@router.post(
+    "/token/",
+    summary="Authenticate user.",
+    tags=["users"]
+)
+async def authenticate_user(
+    request: OAuth2PasswordRequestForm = Depends(),
+    controller: UserController = Depends(
+        ControllerFactory.get_user_controller
+    )  
+) -> TokenCreateSchema:
+    """
+    Authenticates user and returns token.
+    """
+    user = await controller.get_by({"username": request.username})
+    if user.password_verify(password=request.password):
+        return await controller.get_access_token(user=user)
+    raise UnauthorizedException(custom_message="Incorrect username or password.")
+
+
+@router.get(
+    "/me/",
+    summary="Get current authenticated user.",
+    tags=["users"] 
+)
+async def get_authenticated_user(
+    current_user: User = Depends(get_current_active_user)
+) -> UserResponseSchema:
+    """
+    Returns current authenticated user.
+    """
+    return current_user
 
 
 @router.get(
@@ -71,6 +109,26 @@ async def get_user_by_id(
     Returns user by id.
     """
     return await controller.get_by({"id": id})
+
+
+@router.patch(
+    "/me/",
+    summary="Updates current authenticated user.",
+    tags=["users"] 
+)
+async def update_authenticated_user(
+    request: UserUpdateSchema, 
+    current_user: User = Depends(get_current_active_user),
+    controller: UserController = Depends(
+        ControllerFactory.get_user_controller
+    )
+) -> UserResponseSchema:
+    """
+    Updates and returns current authenticated user.
+    """
+    return await controller.update_by(
+        update_by={"id": current_user.id}, request=request.model_dump()
+    )
 
 
 @router.patch(
