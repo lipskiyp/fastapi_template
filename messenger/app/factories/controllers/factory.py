@@ -16,6 +16,34 @@ class ControllerFactory:
     """
 
     @staticmethod
+    def get_message_controller(
+        session: AsyncSession = Depends(db_session)
+    ) -> controllers.MessageController:
+        """
+        Returns Message database controller.
+        """
+        return controllers.MessageController(
+            repository=repositories.MessageRepository(
+                session=session
+            )
+        )
+
+    
+    @staticmethod
+    def get_thread_controller(
+        session: AsyncSession = Depends(db_session)
+    ) -> controllers.ThreadController:
+        """
+        Returns Thread database controller.
+        """
+        return controllers.ThreadController(
+            repository=repositories.ThreadRepository(
+                session=session
+            )
+        )
+    
+
+    @staticmethod
     def get_user_controller(
         session: AsyncSession = Depends(db_session)
     ) -> controllers.UserController:
@@ -27,4 +55,3 @@ class ControllerFactory:
                 session=session
             )
         )
-    

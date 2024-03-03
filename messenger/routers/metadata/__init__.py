@@ -1,4 +1,4 @@
-from .metdata import metadata
+from .metadata import metadata
 
 
 __all__ = [

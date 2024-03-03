@@ -2,7 +2,8 @@
 Threads SQLAlchemy ORM model.
 """
 
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from messenger.core.models import CommonBase
 from ..association_tables import users_and_threads
@@ -14,6 +15,12 @@ class Thread(CommonBase):
     """
     __tablename__ = "threads"
 
+    active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True
+    )
+
     users = relationship(
         "User",
         secondary=users_and_threads,
@@ -24,3 +31,4 @@ class Thread(CommonBase):
     __mapper_args__ = {
         'eager_defaults': True,
     }
+    

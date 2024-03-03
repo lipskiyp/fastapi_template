@@ -1,5 +1,5 @@
 """
-User FastAPI router.
+Users FastAPI router.
 """
 
 from fastapi import APIRouter, Depends, status
@@ -41,7 +41,7 @@ async def create_user(
 
 @router.get(
     "/",
-    summary="Lists users.",
+    summary="List users.",
     tags=["users"]
 )
 async def list_users(
