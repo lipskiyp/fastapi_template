@@ -34,13 +34,13 @@ class BaseRepository(Generic[ModelType]):
     
 
     async def list_by(
-        self, get_by: dict[str, str] = {}, order_by: dict[str, Any] = {}, limit: Optional[int] = None
+        self, get_by: dict[str, str] = {}, order_by: dict[str, Any] = {}, limit: Optional[int] = None, offset: Optional[int] = 0
     ) -> List[ModelType]:
         """
         Get ordered list of model objects by field(s).
         """
         query = self._query(get_by=get_by, order_by=order_by)
-        if limit: query = query.limit(limit)
+        if limit: query = query.limit(limit).offset(offset)
         res = await self._scalars(query)
         return res.all()
     

@@ -3,12 +3,15 @@ Threads FastAPI router.
 """
 
 from fastapi import APIRouter, Depends, status
-from typing import List, Optional
+from typing import List
 from uuid import UUID 
 
 from messenger.app.controllers import ThreadController
 from messenger.app.factories.controllers import ControllerFactory
-from messenger.app.schemas import ThreadResponseSchema
+from messenger.app.services.controllers import ThreadControllerService
+from messenger.app.schemas import (
+    ThreadResponseSchema, ThreadAddRemoveUsersSchema, UserResponseSchema
+)
 
 
 router = APIRouter()
@@ -57,7 +60,7 @@ async def get_thread_by_id(
     controller: ThreadController = Depends(
         ControllerFactory.get_thread_controller
     )
-) -> Optional[ThreadResponseSchema]:
+) -> ThreadResponseSchema:
     """
     Returns a Thread by id.
     """
@@ -80,3 +83,39 @@ async def delete_thread_by_id(
     Deletes thread by id.
     """
     return await controller.delete_by({"id": id})
+
+
+@router.get(
+    "/{id}/users/",
+    summary="Get all users in a thread.",
+    tags=["threads"]
+)
+async def get_users_in_thread(
+    id: UUID,
+    controller: ThreadController = Depends(
+        ControllerFactory.get_thread_controller
+    )
+) -> List[UserResponseSchema]:
+    """
+    Returns all users in a thread.
+    """
+    thread = await controller.get_by({"id": id})
+    return await thread.awaitable_attrs.users
+
+
+@router.patch(
+    "/{id}/users/",
+    summary="Add or remove users to/from a thread.",
+    tags=["threads"]
+)
+async def add_or_remove_users_from_thread(
+    id: UUID,
+    request: ThreadAddRemoveUsersSchema,
+    controller_service: ThreadControllerService = Depends(ThreadControllerService)
+) -> List[UserResponseSchema]:
+    """
+    Adds or removes users to/from a tread.
+    """
+    return await controller_service.add_or_remove_users_from_thread(
+        thread_id=id, users_add=request.add, users_remove=request.remove
+    )

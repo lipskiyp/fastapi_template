@@ -2,16 +2,7 @@
 
 ## Overview
 
-The project implements a scalable asynchronous FastAPI backend for a messenger application with OAuth JWT Bearer user authentication flow. 
-
-New users can be created and authenticated via the API. Authenticated users can create new multi-user message threads and send/receive messages to/from other users. 
-
-The backend implements a variation of an MVC architecture:
-
-- Models represent various data structures (e.g. users).
-- Routers act as API client interfaces (i.e. views).
-- Controllers implement high-level data business logic.
-- Repositories handle low-level data access and operations.
+The project implements a scalable asynchronous FastAPI backend for a messenger application with OAuth JWT Bearer user authentication flow. The project architecture can easily be modified and utilized for any other REST API. New users can be created and authenticated via the API. Authenticated users can create new multi-user message threads and send/receive messages to/from other users. 
 
 ## Core Technologies
 
@@ -43,6 +34,24 @@ python main.py
 ```
 
 If launched successfully SwaggerUI documentation should become available at: `http://localhost:8080/docs`
+
+## Files Overview 
+
+API implementation can be found inside /messenger:
+
+- Core app functionality, including all of the base classes (e.g. base database controller and repository), can be found in /messenger/core.
+- Main app logic can be found in /messenger/app/.
+- FastAPI API routers, including all of the API endpoints, can be found in /messenger/routers/.
+
+## Architecture Overview 
+
+The backend implements a variation of an MVC architecture:
+
+- Models represent various data structures (e.g. users).
+- Routers act as API client interfaces (i.e. views).
+- Controllers implement high-level data business logic.
+- Controller Services implement high-level cross-controller data business logic.
+- Repositories handle low-level data access and operations.
 
 ## ORM Models Overview 
 

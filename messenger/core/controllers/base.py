@@ -3,8 +3,10 @@ Base database controller.
 """
 
 from fastapi_filter.contrib.sqlalchemy import Filter
+from sqlalchemy.exc import IntegrityError
 from typing import Any, Generic, List, Optional, Type
 
+from messenger.app.exceptions import NotFoundException, UnprocessableEntityException
 from messenger.core.models import ModelType
 from messenger.core.repositories import BaseRepository
 
@@ -28,30 +30,36 @@ class BaseController(Generic[ModelType]):
         Creates and returns new model object.
         """
         model_obj = self.model(**kwargs)
-        return await self.repository.create(
-            model_obj=model_obj
-        )
+        try:
+            return await self.repository.create(
+                model_obj=model_obj
+            )
+        except IntegrityError:
+            raise UnprocessableEntityException
 
 
     async def get_by(
         self, get_by: dict[str, Any]
-    ) -> Optional[ModelType]:
+    ) -> ModelType:
         """
         Get a model object by field(s).
         """
-        return await self.repository.get_by(
+        if model_obj := await self.repository.get_by(
             get_by=get_by
-        )
+        ):
+            return model_obj
+        raise NotFoundException
     
 
     async def list_by(
-        self, get_by: dict[str, Any] = {}, order_by: dict[str, Any] = {}, limit: Optional[int] = None
+        self, get_by: dict[str, Any] = {}, order_by: dict[str, Any] = {}, limit: Optional[int] = None, page: Optional[int] = 0
     ) -> List[ModelType]:
         """
         Get ordered list of model objects by field(s).
         """
+        offset = (limit - 1) * page if limit else 0
         return await self.repository.list_by(
-            get_by=get_by, order_by=order_by, limit=limit
+            get_by=get_by, order_by=order_by, limit=limit, offset=offset
         )
     
 
@@ -68,17 +76,19 @@ class BaseController(Generic[ModelType]):
 
     async def update_by(
         self, request: dict[str, Any], update_by: dict[str, Any]
-    ) -> Optional[ModelType]:
+    ) -> ModelType:
         """
         Updates and returns model object.
         """
-        if model_obj := await self.get_by(get_by=update_by):
-            for key, value in request.items():
-                if value is not None:
-                    setattr(model_obj, key, value)
+        model_obj = await self.get_by(get_by=update_by)
+        for key, value in request.items():
+            if value is not None:
+                setattr(model_obj, key, value)
+        try:
             return await self.repository.create(model_obj)
-        return None
-    
+        except IntegrityError:
+            raise UnprocessableEntityException
+
 
     async def delete_by(
         self, delete_by: dict[str, Any]
@@ -86,6 +96,6 @@ class BaseController(Generic[ModelType]):
         """
         Deletes model object.
         """
-        if model_obj := await self.get_by(get_by=delete_by):
-            await self.repository.delete(model_obj)
+        model_obj = await self.get_by(get_by=delete_by)
+        await self.repository.delete(model_obj)
     

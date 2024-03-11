@@ -39,7 +39,7 @@ async def create_user(
     Creates and returns new users.
     """
     return await controller.create_user(
-        **request.model_dump()
+        request.model_dump()
     )
 
 
@@ -104,7 +104,7 @@ async def get_user_by_id(
     controller: UserController = Depends(
         ControllerFactory.get_user_controller
     )
-) -> Optional[UserResponseSchema]:
+) -> UserResponseSchema:
     """
     Returns user by id.
     """
@@ -142,7 +142,7 @@ async def update_user_by_id(
     controller: UserController = Depends(
         ControllerFactory.get_user_controller
     )
-) -> Optional[UserResponseSchema]:
+) -> UserResponseSchema:
     """
     Updates and returns user by id.
     """

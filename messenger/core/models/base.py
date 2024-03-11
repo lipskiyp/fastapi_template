@@ -5,13 +5,14 @@ Base SQLAlchemy ORM model.
 from datetime import datetime
 from sqlalchemy import DateTime
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass
 from sqlalchemy.sql import func
 from uuid import UUID as uuid
 from uuid import uuid4
 
 
-class Base(MappedAsDataclass, DeclarativeBase):
+class Base(MappedAsDataclass, DeclarativeBase, AsyncAttrs):
     pass
 
 

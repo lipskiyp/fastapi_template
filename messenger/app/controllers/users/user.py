@@ -35,8 +35,8 @@ class UserController(BaseController):
         if password != password_confirm:
             raise UnauthorizedException(custom_message="Invalid password.")
         
-        model_obj = self.model(**request)
-        model_obj.password(password)
+        model_obj = self.model(**request, hashed_password="")
+        model_obj.password = password
 
         return await self.repository.create(model_obj=model_obj)
     
