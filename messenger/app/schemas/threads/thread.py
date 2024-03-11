@@ -19,7 +19,7 @@ class ThreadResponseSchema(BaseModel):
 
 class ThreadAddRemoveUsersSchema(BaseModel):
     """
-    Pydantic schema to add/remove users to/from a threads.
+    Pydantic schema to add/remove users to/from a thread.
     """
     add: Optional[List[UUID]] = []
     remove: Optional[List[UUID]] = []

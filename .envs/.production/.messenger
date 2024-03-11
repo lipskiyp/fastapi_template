@@ -1,4 +1,4 @@
-AUTH_KEY=aea6afd64eed70ebeb2155faf89cadc8a51ad8ada704329659f7d203831cc0f0
+AUTH_KEY=aea6afd64eed70ebeb2155faf89cadc8a51ad8ada704329659f7d203831cc0f0  # included on purpose as an example
 AUTH_ALGORITHM=HS256
 AUTH_TOKEN_PATH=/api/users/token/
 AUTH_EXPIRE=1440

@@ -14,9 +14,11 @@ from messenger.app.dependencies.authentication import get_current_active_user
 from messenger.app.exceptions import UnauthorizedException
 from messenger.app.factories.controllers import ControllerFactory
 from messenger.app.filters import UserFilter
+from messenger.app.services.controllers import UserControllerService
 from messenger.app.models import User
 from messenger.app.schemas import (
-    UserCreateSchema, UserResponseSchema, UserUpdateSchema, TokenCreateSchema
+    UserCreateSchema, UserResponseSchema, UserUpdateSchema, 
+    TokenCreateSchema, ThreadResponseSchema, UserAddRemoveThreadsSchema
 )
 
 
@@ -167,3 +169,39 @@ async def delete_user_by_id(
     Deletes user by id.
     """
     return await controller.delete_by({"id": id})
+
+
+@router.get(
+    "/threads/{id}",
+    summary="Get all user's threads.",
+    tags=["users"]
+)
+async def get_users_in_thread(
+    id: UUID,
+    controller: UserController = Depends(
+        ControllerFactory.get_user_controller
+    )
+) -> List[ThreadResponseSchema]:
+    """
+    Returns all user's threads.
+    """
+    user = await controller.get_by({"id": id})
+    return await user.awaitable_attrs.threads
+
+
+@router.patch(
+    "/threads/{id}",
+    summary="Add or remove threads to/from a user.",
+    tags=["threads"]
+)
+async def add_or_remove_threads_from_user(
+    id: UUID,
+    request: UserAddRemoveThreadsSchema,
+    controller_service: UserControllerService = Depends(UserControllerService)
+) -> List[ThreadResponseSchema]:
+    """
+    Adds or removes threads to/from a user.
+    """
+    return await controller_service.add_or_remove_threads_from_user(
+        user_id=id, threads_add=request.add, threads_remove=request.remove
+    )

@@ -3,7 +3,7 @@ User Pydantic validation schemas.
 """
 from datetime import datetime
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID 
 
 
@@ -16,6 +16,14 @@ class UserCreateSchema(BaseModel):
     secondname: str 
     password: str
     password_confirm: str
+
+
+class UserAddRemoveThreadsSchema(BaseModel):
+    """
+    Pydantic schema to add/remove thread to/from a user.
+    """
+    add: Optional[List[UUID]] = []
+    remove: Optional[List[UUID]] = []
 
 
 class UserResponseSchema(BaseModel):

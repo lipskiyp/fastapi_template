@@ -86,7 +86,7 @@ async def delete_thread_by_id(
 
 
 @router.get(
-    "/{id}/users/",
+    "/users/{id}",
     summary="Get all users in a thread.",
     tags=["threads"]
 )
@@ -104,7 +104,7 @@ async def get_users_in_thread(
 
 
 @router.patch(
-    "/{id}/users/",
+    "/users/{id}",
     summary="Add or remove users to/from a thread.",
     tags=["threads"]
 )
