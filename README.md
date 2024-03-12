@@ -17,9 +17,9 @@ The project implements a scalable asynchronous FastAPI backend for a messenger a
 
 ## Requirements
 
-PostgreSQL, Docker and Docker Compose are all necessary to run the application and need to be installed on the machine before launch.
+PostgreSQL, Docker and Docker Compose (unless launched locally) are necessary to run the application and need to be installed on the machine before launch.
 
-Specific library requirements can be installed using your preferred package manager, e.g. pip:
+If launched locally, specific library requirements can be installed using your preferred package manager, e.g. pip:
 
 ```bash
 pip3 install -r requirements.txt
@@ -29,9 +29,19 @@ Ensure .envs files are correctly setup with the desired application configuratio
 
 ## Launch
 
+### Locally:
+
 ```bash
 python main.py
 ```
+
+### Docker:
+
+```bash
+docker compose -f launch.yml up
+```
+
+NB Ensure POSTGRESQL_HOST=host.docker.internal in ./envs/.production/.messenger if PostgreSQL is running on localhost.
 
 If launched successfully SwaggerUI documentation should become available at: `http://localhost:8080/docs`
 
@@ -64,6 +74,5 @@ Three SQLAlchemy ORM models have been implemented to represent: User, Message an
 
 ## In Progress
 
-1. Docker
-2. Alembic 
-3. Permission groups
+1. Alembic 
+2. Permission groups

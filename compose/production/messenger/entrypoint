@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+python << END
+import sys
+import time
+
+import psycopg2
+
+while True:
+    try:
+        psycopg2.connect(
+            dbname="${POSTGRESQL_DB}",
+            user="${POSTGRESQL_USER}",
+            password="${POSTGRESQL_PASSWORD}",
+            host="${POSTGRESQL_HOST}",
+        )
+        break
+    except psycopg2.OperationalError as error:
+        sys.stderr.write("Waiting for PostgreSQL to become available...\n")
+
+    time.sleep(1)
+END
+
+>&2 echo 'PostgreSQL is available'
+
+exec "$@"
