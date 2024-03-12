@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi_filter import FilterDepends
 from fastapi_filter.contrib.sqlalchemy import Filter
 from fastapi.security import OAuth2PasswordRequestForm
-from typing import List, Optional
+from typing import List
 from uuid import UUID 
 
 from messenger.app.controllers import UserController
@@ -82,7 +82,10 @@ async def get_authenticated_user(
 @router.get(
     "/",
     summary="List users.",
-    tags=["users"]
+    tags=["users"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def list_users(
     filters: Filter = FilterDepends(UserFilter), 
@@ -99,7 +102,10 @@ async def list_users(
 @router.get(
     "/{id}",
     summary="Returns a user by id.",
-    tags=["users"]
+    tags=["users"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def get_user_by_id(
     id: UUID,
@@ -136,7 +142,10 @@ async def update_authenticated_user(
 @router.patch(
     "/{id}",
     summary="Updates a user by id.",
-    tags=["users"]
+    tags=["users"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def update_user_by_id(
     id: UUID,
@@ -157,7 +166,10 @@ async def update_user_by_id(
     "/{id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Deletes a user by id.",
-    tags=["users"]
+    tags=["users"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def delete_user_by_id(
     id: UUID,
@@ -174,7 +186,10 @@ async def delete_user_by_id(
 @router.get(
     "/threads/{id}",
     summary="Get all user's threads.",
-    tags=["users"]
+    tags=["users"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def get_users_in_thread(
     id: UUID,
@@ -192,7 +207,10 @@ async def get_users_in_thread(
 @router.patch(
     "/threads/{id}",
     summary="Add or remove threads to/from a user.",
-    tags=["threads"]
+    tags=["threads"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def add_or_remove_threads_from_user(
     id: UUID,

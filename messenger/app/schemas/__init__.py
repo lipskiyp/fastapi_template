@@ -1,3 +1,6 @@
+from .messages.message import (
+    MessageSendSchema, MessageResponseSchema, MessageUpdateSchema
+)
 from .threads.thread import ThreadResponseSchema, ThreadAddRemoveUsersSchema
 from .users.token import TokenCreateSchema
 from .users.user import (
@@ -7,6 +10,9 @@ from .users.user import (
 
 
 __all__ = [
+    "MessageSendSchema",
+    "MessageResponseSchema",
+    "MessageUpdateSchema",
     "ThreadResponseSchema",
     "ThreadAddRemoveUsersSchema",
     "TokenCreateSchema",

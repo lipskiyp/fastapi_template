@@ -6,11 +6,14 @@ from fastapi import APIRouter, Depends, status
 from typing import List
 from uuid import UUID 
 
-from messenger.app.controllers import ThreadController
+from messenger.app.controllers import ThreadController, MessageController
+from messenger.app.dependencies.authentication import get_current_active_user
 from messenger.app.factories.controllers import ControllerFactory
 from messenger.app.services.controllers import ThreadControllerService
 from messenger.app.schemas import (
-    ThreadResponseSchema, ThreadAddRemoveUsersSchema, UserResponseSchema
+    MessageResponseSchema,
+    ThreadResponseSchema, ThreadAddRemoveUsersSchema, 
+    UserResponseSchema
 )
 
 
@@ -21,7 +24,10 @@ router = APIRouter()
     "/",
     status_code=status.HTTP_201_CREATED,
     summary="Create a new thread.",
-    tags=["threads"]   
+    tags=["threads"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def create_thread(
     controller: ThreadController = Depends(
@@ -37,7 +43,10 @@ async def create_thread(
 @router.get(
     "/",
     summary="List threads.",
-    tags=["threads"]   
+    tags=["threads"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def list_threads(
     controller: ThreadController = Depends(
@@ -53,7 +62,10 @@ async def list_threads(
 @router.get(
     "/{id}",
     summary="Get a thread by id.",
-    tags=["threads"]   
+    tags=["threads"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def get_thread_by_id(
     id: UUID,
@@ -71,7 +83,10 @@ async def get_thread_by_id(
     "/{id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Deletes a thread by id.",
-    tags=["threads"]
+    tags=["threads"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def delete_thread_by_id(
     id: UUID,
@@ -88,7 +103,10 @@ async def delete_thread_by_id(
 @router.get(
     "/users/{id}",
     summary="Get all users in a thread.",
-    tags=["threads"]
+    tags=["threads"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def get_users_in_thread(
     id: UUID,
@@ -106,7 +124,10 @@ async def get_users_in_thread(
 @router.patch(
     "/users/{id}",
     summary="Add or remove users to/from a thread.",
-    tags=["threads"]
+    tags=["threads"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
 )
 async def add_or_remove_users_from_thread(
     id: UUID,
@@ -118,4 +139,29 @@ async def add_or_remove_users_from_thread(
     """
     return await controller_service.add_or_remove_users_from_thread(
         thread_id=id, users_add=request.add, users_remove=request.remove
+    )
+
+
+@router.get(
+    "/messages/{id}",
+    summary="Get all messages in a thread.",
+    tags=["threads"],
+    dependencies=[
+        Depends(get_current_active_user)  # require authenticated user
+    ]   
+)
+async def get_messages_in_thread(
+    id: UUID,
+    page: int = 0, 
+    limit: int = 100,
+    controller: MessageController = Depends(
+        ControllerFactory.get_message_controller
+    )
+) -> List[MessageResponseSchema]:
+    """
+    Returns all messages in a thread.
+    """
+    return await controller.list_by(
+        get_by={"thread_id": id}, order_by={"created_at": "desc"}, 
+        page=page, limit=limit
     )

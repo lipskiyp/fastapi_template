@@ -34,8 +34,10 @@ class BaseController(Generic[ModelType]):
             return await self.repository.create(
                 model_obj=model_obj
             )
-        except IntegrityError:
-            raise UnprocessableEntityException
+        except IntegrityError as e:
+            raise UnprocessableEntityException(
+                message=str(e)
+            )
 
 
     async def get_by(
@@ -86,8 +88,10 @@ class BaseController(Generic[ModelType]):
                 setattr(model_obj, key, value)
         try:
             return await self.repository.create(model_obj)
-        except IntegrityError:
-            raise UnprocessableEntityException
+        except IntegrityError as e:
+            raise UnprocessableEntityException(
+                message=str(e)
+            )
 
 
     async def delete_by(
