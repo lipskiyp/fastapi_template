@@ -2,7 +2,9 @@
 
 ## Overview
 
-The project implements a scalable asynchronous FastAPI backend for a messenger application with OAuth JWT Bearer user authentication flow. The project architecture can easily be modified and utilized for any other REST API. New users can be created and authenticated via the API. Authenticated users can create new multi-user message threads and send/receive messages to/from other users. 
+The project implements a scalable asynchronous FastAPI backend for a messenger application with OAuth JWT Bearer user authentication flow. New users can be created and authenticated via the API. Authenticated users can create new multi-user message threads and send/receive messages to/from other users. 
+
+The project architecture can easily be modified and extended for any other REST API service.
 
 ## Core Technologies
 
@@ -11,7 +13,6 @@ The project implements a scalable asynchronous FastAPI backend for a messenger a
 - Pydantic
 - SQLAlchemy
 - PostgreSQL
-- Alembic
 - Docker 
 - Jose
 
@@ -57,7 +58,7 @@ API implementation can be found inside /messenger:
 
 The backend implements a variation of an MVC architecture:
 
-- Models represent various data structures (e.g. users).
+- Models represent various data structures (e.g. users and messages).
 - Routers act as API client interfaces (i.e. views).
 - Controllers implement high-level data business logic.
 - Controller Services implement high-level cross-controller data business logic.
@@ -70,9 +71,3 @@ Three SQLAlchemy ORM models have been implemented to represent: User, Message an
 - User and Thread have many-to-many relationship expressed via users_and_threads association table.
 - User and Message have one-to-many relationship.
 - Thread and Message have one-to-many relationship.
-
-
-## In Progress
-
-1. Alembic 
-2. Permission groups
