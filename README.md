@@ -2,9 +2,9 @@
 
 ## Overview
 
-The project implements a scalable asynchronous FastAPI backend for a messenger application with OAuth JWT Bearer user authentication flow. New users can be created and authenticated via the API. Authenticated users can create new multi-user message threads and send/receive messages to/from other users. 
+The project implements a scalable asynchronous FastAPI backend for a messenger application with PostgreSQL DBMS, SQLAlchemy ORM and Alembic migrations. New users can be created and authenticated via OAuth JWT Bearer authentication flow. Authenticated users can create new multi-user message threads and send/receive messages to/from other users. 
 
-The project architecture can easily be modified and extended for any other REST API service.
+Project's architecture can easily be adapted and extended to any FastAPI application in very short time.
 
 ## Core Technologies
 
@@ -30,7 +30,7 @@ Configs can be updated inside .envs files with the desired application configura
 
 ## Alembic Migrations
 
-To apply alembic SQLAlchemy migrations to the database configure the database credentials inside .envs files and then run:
+To apply alembic migrations configure database credentials inside .envs files and "upgrade" the database by running:
 
 ```bash
 alembic upgrade head
@@ -52,29 +52,35 @@ docker compose -f launch.yml up
 
 NB Ensure POSTGRESQL_HOST=host.docker.internal in ./envs/.production/.messenger if PostgreSQL is running on localhost.
 
-If launched successfully SwaggerUI documentation should become available at: `http://localhost:8080/docs`
+If launched successfully Swagger UI documentation should become available at: `http://localhost:8080/docs`
+
+API endpoints can be interacted with via `http://localhost:8080/api/` URLs.
 
 ## Files Overview 
 
 API implementation can be found inside /messenger:
 
-- Core app functionality, including all of the base classes (e.g. base database controller and repository), can be found in /messenger/core.
-- Main app logic can be found in /messenger/app/.
-- FastAPI API routers, including all of the API endpoints, can be found in /messenger/routers/.
+- /messenger/core - Core app functionality, including all of the base classes (e.g. base database controller and repository).
+- /messenger/app/ - App logic with specific class implementations (e.g. User database controller and repository).
+- /messenger/routers/ - FastAPI API routers with all of the API endpoints.
+
+- /alembic - Alembic configuration files and migration files.
+
+- /compose/production/messenger - Production Docker files with entrypoint and start command scripts.  
 
 ## Architecture Overview 
 
 The backend implements a variation of an MVC architecture:
 
-- Models represent various data structures (e.g. users and messages).
-- Routers act as API client interfaces (i.e. views).
-- Controllers implement high-level data business logic.
-- Controller Services implement high-level cross-controller data business logic.
-- Repositories handle low-level data access and operations.
+- SQLAlchemy ORM models represent various data structures (e.g. users and messages).
+- FastAPI Routers act as the main client API interface (i.e. views).
+- Database Controllers implement high-level data business logic.
+- Database Controller Services implement high-level cross-controller data business logic.
+- Database Repositories handle low-level data access and operations.
 
 ## ORM Models Overview 
 
-Three SQLAlchemy ORM models have been implemented to represent: User, Message and Thread.
+Three SQLAlchemy ORM models have been implemented to represent: Users, Messages and Threads.
 
 - User and Thread have many-to-many relationship expressed via users_and_threads association table.
 - User and Message have one-to-many relationship.
