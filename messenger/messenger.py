@@ -52,7 +52,7 @@ class Messenger:
 
 messenger = Messenger().app
 
-
+"""
 from messenger.core.models import Base
 from messenger.core.database import engine
 
@@ -63,3 +63,4 @@ async def init_models():
 @messenger.on_event("startup")
 async def on_startup():
     await init_models()
+"""

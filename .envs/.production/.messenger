@@ -4,7 +4,7 @@ AUTH_TOKEN_PATH=/api/users/token/
 AUTH_EXPIRE=1440
 
 POSTGRESQL_DB=Messenger
-POSTGRESQL_HOST=host.docker.internal
+POSTGRESQL_HOST=localhost # host.docker.internal
 POSTGRESQL_PORT=5432
 POSTGRESQL_USER=postgres
 POSTGRESQL_PASSWORD=

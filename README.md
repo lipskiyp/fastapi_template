@@ -9,10 +9,10 @@ The project architecture can easily be modified and extended for any other REST 
 ## Core Technologies
 
 - FastAPI
-- FastAPI Filters
 - Pydantic
 - SQLAlchemy
 - PostgreSQL
+- Alembic
 - Docker 
 - Jose
 
@@ -26,7 +26,15 @@ If launched locally, specific library requirements can be installed using your p
 pip3 install -r requirements.txt
 ```
 
-Ensure .envs files are correctly setup with the desired application configurations and appropriate database credentials etc.
+Configs can be updated inside .envs files with the desired application configurations, database credentials etc.
+
+## Alembic Migrations
+
+To apply alembic SQLAlchemy migrations to the database configure the database credentials inside .envs files and then run:
+
+```bash
+alembic upgrade head
+```
 
 ## Launch
 
