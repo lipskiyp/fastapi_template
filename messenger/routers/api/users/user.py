@@ -2,7 +2,7 @@
 Users FastAPI router.
 """
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Security
 from fastapi_filter import FilterDepends
 from fastapi_filter.contrib.sqlalchemy import Filter
 from fastapi.security import OAuth2PasswordRequestForm
@@ -84,7 +84,7 @@ async def get_authenticated_user(
     summary="List users.",
     tags=["users"],
     dependencies=[
-        Depends(get_current_active_user)  # require authenticated user
+        Security(get_current_active_user, scopes=["users:admin"])   # require authenticated users:admins
     ]   
 )
 async def list_users(
@@ -104,7 +104,7 @@ async def list_users(
     summary="Returns a user by id.",
     tags=["users"],
     dependencies=[
-        Depends(get_current_active_user)  # require authenticated user
+        Security(get_current_active_user, scopes=["users:admin"])   # require authenticated users:admins
     ]   
 )
 async def get_user_by_id(
@@ -144,7 +144,7 @@ async def update_authenticated_user(
     summary="Updates a user by id.",
     tags=["users"],
     dependencies=[
-        Depends(get_current_active_user)  # require authenticated user
+        Security(get_current_active_user, scopes=["users:admin"])   # require authenticated users:admins
     ]   
 )
 async def update_user_by_id(
@@ -168,7 +168,7 @@ async def update_user_by_id(
     summary="Deletes a user by id.",
     tags=["users"],
     dependencies=[
-        Depends(get_current_active_user)  # require authenticated user
+        Security(get_current_active_user, scopes=["users:admin"])   # require authenticated users:admins
     ]   
 )
 async def delete_user_by_id(

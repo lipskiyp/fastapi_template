@@ -48,7 +48,10 @@ class UserController(BaseController):
         Creates and returns Token.
         """
         token = create_token(
-            data={"sub": user.username},
+            data={
+                "sub": user.username,
+                "scopes": user.scopes
+            },
             expires_delta=timedelta(
                 minutes=authentication_config.AUTH_EXPIRE
             )

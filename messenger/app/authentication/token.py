@@ -4,12 +4,13 @@ Access Token.
 
 from datetime import datetime, timedelta
 from jose import jwt
+from typing import Any
 
 from messenger.app.configs import authentication_config
 
 
 def create_token(
-    data: dict,
+    data: dict[str, Any],
     expires_delta: timedelta
 ) -> str:
     """

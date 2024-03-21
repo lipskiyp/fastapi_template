@@ -35,6 +35,7 @@ class UserResponseSchema(BaseModel):
     firstname: str
     secondname: str 
     active: bool
+    scopes_str: str
     created_at: datetime
     updated_at: datetime
 

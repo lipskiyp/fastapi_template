@@ -4,6 +4,7 @@ User SQLAlchemy ORM model.
 
 from sqlalchemy import Boolean, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import List
 
 from messenger.core.authentication import pwd_context
 from messenger.core.models import CommonBase
@@ -34,6 +35,11 @@ class User(CommonBase):
         String,
         nullable=False,
     )
+    scopes_str: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+        default="users:regular"
+    )
     active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
@@ -52,6 +58,21 @@ class User(CommonBase):
     }
 
     @property
+    def scopes(self) -> List[str]:
+        """
+        List user scopes.
+        """
+        return self.scopes_str.split(",")
+    
+    @scopes.setter
+    def scopes(self, scopes: List[str]) -> str:
+        """
+        Set user scopes
+        """
+        self.scopes_str = ",".join(scopes)
+        return self.scopes_str
+
+    @property
     def password(self) -> str:
         """
         Returns hashed password
@@ -66,7 +87,6 @@ class User(CommonBase):
         self.hashed_password = pwd_context.hash(password)
         return self.hashed_password
     
-
     def password_verify(self, password: str) -> bool:
         """
         Verify password.
