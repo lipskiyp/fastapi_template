@@ -180,7 +180,7 @@ async def delete_user_by_id(
     """
     Deletes user by id.
     """
-    return await controller.delete_by({"id": id})
+    return await controller.soft_delete_by({"id": id})
 
 
 @router.get(

@@ -87,6 +87,8 @@ class BaseRepository(Generic[ModelType]):
         query = select(self.model)
         query = self._filter_by(query, get_by)
         query = self._order_by(query, order_by)
+        if hasattr(self.model, "deleted"):
+            query = query.filter(self.model.deleted == False)  # dont't show soft delete
         return query
 
 

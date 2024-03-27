@@ -78,6 +78,6 @@ async def delete_message(
     message = await controller.get_by({"id": id})
     if message.user_id != current_user.id:
         raise UnauthorizedException
-    return await controller.delete_by(
+    return await controller.soft_delete_by(
         update_by={"id": message.id}
     )

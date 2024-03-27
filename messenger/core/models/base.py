@@ -3,7 +3,7 @@ Base SQLAlchemy ORM model.
 """
 
 from datetime import datetime
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, MappedAsDataclass
@@ -40,5 +40,11 @@ class CommonBase(Base):
         server_default=func.now(),
         onupdate=func.now(),
         init=False,
+    )
+    deleted: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        init=False,
+        index=True
     )
     

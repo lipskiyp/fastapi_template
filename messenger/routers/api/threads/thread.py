@@ -97,7 +97,7 @@ async def delete_thread_by_id(
     """
     Deletes thread by id.
     """
-    return await controller.delete_by({"id": id})
+    return await controller.soft_delete_by({"id": id})
 
 
 @router.get(

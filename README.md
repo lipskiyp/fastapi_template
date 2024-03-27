@@ -1,8 +1,8 @@
-# FastAPI Messenger Back-End 
+# FastAPI Boilerplate
 
 ## Overview
 
-The project implements a scalable asynchronous FastAPI backend for a messenger application with PostgreSQL DBMS, SQLAlchemy ORM and Alembic migrations. New users can be created and authenticated via OAuth JWT Bearer authentication flow with basic scopes. Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users.
+This FastAPI Boilerplate project implements a scalable asynchronous FastAPI backend for a messenger application with PostgreSQL DBMS, SQLAlchemy ORM and Alembic migrations. New users can be created and authenticated via OAuth JWT Bearer authentication flow with basic scopes. Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users.
 
 Project's architecture can easily be adapted and extended to any FastAPI application in very short time.
 

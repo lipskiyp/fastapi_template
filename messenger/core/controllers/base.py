@@ -102,4 +102,26 @@ class BaseController(Generic[ModelType]):
         """
         model_obj = await self.get_by(get_by=delete_by)
         await self.repository.delete(model_obj)
+
+
+    async def soft_delete_by(
+        self, delete_by: dict[str, Any]
+    ) -> None:
+        """
+        (Soft) deletes model object by setting deleted attr = True.
+        """
+        model_obj = await self.get_by(get_by=delete_by)
+        if hasattr(model_obj, "deleted"):
+            setattr(model_obj, "deleted", True)
+        else:
+            raise UnprocessableEntityException(
+                message="Model object has no attribute 'deleted'."
+            )
+        try:
+            await self.repository.create(model_obj)
+        except IntegrityError as e:
+            raise UnprocessableEntityException(
+                message=str(e)
+            )
+
     
