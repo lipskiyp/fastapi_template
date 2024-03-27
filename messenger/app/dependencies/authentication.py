@@ -30,6 +30,21 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
+def check_user_scopes(
+    scopes, user_scopes
+) -> None:
+    """
+    Check if user has all of the required scopes.
+    """
+    # Full access to superuser
+    if "users:super" in user_scopes:
+        return 
+    
+    for scope in scopes:
+        if scope not in user_scopes:
+            raise INVALID_CREDENTIALS
+
+
 def validate_token(
     security_scopes: SecurityScopes, token: str = Depends(oauth2_scheme)
 ) -> TokenData:
@@ -47,14 +62,10 @@ def validate_token(
                 "scopes": payload.get("scopes", [])
             })
 
-            # Full access to superuser
-            if "user:super" in token_data.scopes:
-                return token_data
-
             # Check user scopes against provided scopes
-            for scope in security_scopes.scopes:
-                if scope not in token_data.scopes:
-                    raise INVALID_CREDENTIALS
+            check_user_scopes(
+                scopes=security_scopes.scopes, user_scopes=token_data.scopes
+            )
                 
             return token_data
 

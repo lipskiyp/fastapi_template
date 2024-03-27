@@ -9,6 +9,7 @@ from messenger.app.controllers import MessageController
 from messenger.app.dependencies.authentication import get_current_active_user
 from messenger.app.exceptions import UnauthorizedException
 from messenger.app.factories.controllers import ControllerFactory
+from messenger.app.services.controllers import MessageControllerService
 from messenger.app.models import User
 from messenger.app.schemas import (
     MessageSendSchema, MessageResponseSchema, MessageUpdateSchema
@@ -27,13 +28,13 @@ router = APIRouter()
 async def send_message(
     request: MessageSendSchema,
     current_user: User = Depends(get_current_active_user),
-    controller: MessageController = Depends(ControllerFactory.get_message_controller)
+    controller_service: MessageControllerService = Depends(MessageControllerService),
 ) -> MessageResponseSchema:
     """
     Send a message.
     """
-    return await controller.create(
-        **request.model_dump(), user_id = current_user.id
+    return await controller_service.send_message(
+        user=current_user, request=request.model_dump()
     )
 
 
@@ -52,11 +53,8 @@ async def update_message(
     """
     Updates and returns a message.
     """
-    message = await controller.get_by({"id": id})
-    if message.user_id != current_user.id:
-        raise UnauthorizedException
-    return await controller.update_by(
-        update_by={"id": message.id}, request=request.model_dump()
+    return await controller.update_message(
+        id=id, user=current_user, request=request.model_dump()
     )
 
 
@@ -75,9 +73,6 @@ async def delete_message(
     """
     Deletes a message.
     """
-    message = await controller.get_by({"id": id})
-    if message.user_id != current_user.id:
-        raise UnauthorizedException
-    return await controller.soft_delete_by(
-        update_by={"id": message.id}
+    return await controller.delete_message(
+        id=id, user=current_user
     )

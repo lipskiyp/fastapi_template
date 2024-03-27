@@ -2,7 +2,11 @@
 Message database controller.
 """
 
-from messenger.app.models import Message
+from typing import Any
+from uuid import UUID 
+
+from messenger.app.exceptions import UnauthorizedException
+from messenger.app.models import Message, User
 from messenger.app.repositories import MessageRepository
 from messenger.core.controllers import BaseController
 
@@ -16,4 +20,34 @@ class MessageController(BaseController):
         self, repository: MessageRepository
     ) -> None:
         super().__init__(model=Message, repository=repository)
+
+
+    async def update_message(
+        self, id: UUID, user: User, request: dict[str, Any],
+    ) -> Message:
+        """
+        Updates and returns a message.
+        """
+        message = await self.get_by({"id": id})
+        if message.user_id != user.id:  # only sender can update message
+            raise UnauthorizedException
+        
+        return await self.update_by(
+            update_by={"id": message.id}, request=request
+        )
+
+
+    async def delete_message(
+        self, id: UUID, user: User,
+    ) -> None:
+        """
+        Deletes a message.
+        """
+        message = await self.get_by({"id": id})
+        if message.user_id != user.id:  # only sender can delete message
+            raise UnauthorizedException
+        
+        return await self.soft_delete_by(
+            update_by={"id": message.id}
+        )
         

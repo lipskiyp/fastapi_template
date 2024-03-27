@@ -59,10 +59,9 @@ async def authenticate_user(
     """
     Authenticates user and returns token.
     """
-    user = await controller.get_by({"username": request.username})
-    if user.password_verify(password=request.password):
-        return await controller.get_access_token(user=user)
-    raise UnauthorizedException(custom_message="Incorrect username or password.")
+    return await controller.authenticate_user(
+        request=request
+    )
 
 
 @router.get(
@@ -84,7 +83,8 @@ async def get_authenticated_user(
     summary="List users.",
     tags=["users"],
     dependencies=[
-        Security(get_current_active_user, scopes=["users:admin"])   # require authenticated users:admins
+        # requires authenticated user with users:admins scopes
+        Security(get_current_active_user, scopes=["users:admin"])   
     ]   
 )
 async def list_users(
@@ -104,7 +104,8 @@ async def list_users(
     summary="Returns a user by id.",
     tags=["users"],
     dependencies=[
-        Security(get_current_active_user, scopes=["users:admin"])   # require authenticated users:admins
+        # requires authenticated user with users:admins scopes
+        Security(get_current_active_user, scopes=["users:admin"])   
     ]   
 )
 async def get_user_by_id(
@@ -144,7 +145,8 @@ async def update_authenticated_user(
     summary="Updates a user by id.",
     tags=["users"],
     dependencies=[
-        Security(get_current_active_user, scopes=["users:admin"])   # require authenticated users:admins
+        # requires authenticated user with users:admins scopes
+        Security(get_current_active_user, scopes=["users:admin"])   
     ]   
 )
 async def update_user_by_id(
@@ -168,7 +170,8 @@ async def update_user_by_id(
     summary="Deletes a user by id.",
     tags=["users"],
     dependencies=[
-        Security(get_current_active_user, scopes=["users:admin"])   # require authenticated users:admins
+        # requires authenticated user with users:admins scopes
+        Security(get_current_active_user, scopes=["users:admin"]) 
     ]   
 )
 async def delete_user_by_id(
@@ -184,15 +187,12 @@ async def delete_user_by_id(
 
 
 @router.get(
-    "/threads/{id}",
+    "/me/threads/",
     summary="Get all user's threads.",
     tags=["users"],
-    dependencies=[
-        Depends(get_current_active_user)  # require authenticated user
-    ]   
 )
 async def get_users_in_thread(
-    id: UUID,
+    current_user: User = Depends(get_current_active_user),
     controller: UserController = Depends(
         ControllerFactory.get_user_controller
     )
@@ -200,26 +200,23 @@ async def get_users_in_thread(
     """
     Returns all user's threads.
     """
-    user = await controller.get_by({"id": id})
+    user = await controller.get_by({"id": current_user.id})
     return await user.awaitable_attrs.threads
 
 
 @router.patch(
-    "/threads/{id}",
+    "/me/threads/",
     summary="Add or remove threads to/from a user.",
-    tags=["threads"],
-    dependencies=[
-        Depends(get_current_active_user)  # require authenticated user
-    ]   
+    tags=["users"],
 )
 async def add_or_remove_threads_from_user(
-    id: UUID,
     request: UserAddRemoveThreadsSchema,
+    current_user: User = Depends(get_current_active_user),
     controller_service: UserControllerService = Depends(UserControllerService)
 ) -> List[ThreadResponseSchema]:
     """
     Adds or removes threads to/from a user.
     """
     return await controller_service.add_or_remove_threads_from_user(
-        user_id=id, threads_add=request.add, threads_remove=request.remove
+        user_id=current_user.id, threads_add=request.add, threads_remove=request.remove
     )

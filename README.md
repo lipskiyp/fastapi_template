@@ -2,7 +2,7 @@
 
 ## Overview
 
-This FastAPI boilerplate project implements a scalable asynchronous FastAPI backend for a messenging service with PostgreSQL DBMS, SQLAlchemy ORM, Alembic migrations, Docker containerization and Pydantic type validation. New users can be created and authenticated via OAuth JWT Bearer authentication flow with basic access scopes (regular, admin and superuser). Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users as well as access all threads.
+This FastAPI boilerplate project implements a scalable asynchronous FastAPI backend for a messenging service with PostgreSQL DBMS, SQLAlchemy ORM, Alembic migrations, Docker containerization and Pydantic type validation. New users can be created and authenticated via OAuth JWT Bearer authentication flow with basic access scopes (regular, admin and superuser). Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users.
 
 Project's architecture can be easily adapted and extended to any FastAPI service with very little effort.
 

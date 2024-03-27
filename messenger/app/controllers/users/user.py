@@ -3,6 +3,7 @@ User database controller.
 """
 
 from datetime import timedelta
+from fastapi.security import OAuth2PasswordRequestForm
 from typing import Any
 
 from messenger.app.authentication import create_token
@@ -39,6 +40,18 @@ class UserController(BaseController):
         model_obj.password = password
 
         return await self.repository.create(model_obj=model_obj)
+    
+
+    async def authenticate_user(
+        self, request: OAuth2PasswordRequestForm
+    ) -> TokenCreateSchema:
+        """
+        Authenticates user and returns Token.
+        """
+        user = await self.get_by({"username": request.username})
+        if user.password_verify(password=request.password):
+            return await self.get_access_token(user=user)
+        raise UnauthorizedException(custom_message="Incorrect username or password.")
     
 
     async def get_access_token(

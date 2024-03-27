@@ -36,9 +36,10 @@ class UserControllerService(BaseControllerService):
 
         for thread_id in threads_add:  # for every user to be added
             try:
-                thread = await self.thread_controller.get_by({"id": user_id})  
+                thread = await self.thread_controller.get_by({"id": thread_id})  
                 if thread not in user.threads: user.threads.append(thread)  # add thread to the user if not already in the user
             except NotFoundException:
+                print("hey")
                 pass
 
         for thread_id in threads_remove:  # for every user to be removed
