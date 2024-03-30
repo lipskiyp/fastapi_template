@@ -4,11 +4,11 @@ Production-ready scalable asynchronous FastAPI backend template.
 
 ## Overview
 
-The aim of the project was to implement a scalable production-ready FastAPI template with out-of-the-box support for a number of common backend features: asynchronous support, PostgreSQL DBMS, SQLAlchemy ORM, Alembic migrations, Docker containerization, Pydantic type validation, basic user authorization and authentication with permission scopes. Project's core logic, including the base class implementations is isolated within the /core directory, while the application specific logic can be found inside the /app directory. 
+The aim of the project was to implement a scalable production-ready FastAPI template with out-of-the-box support for a number of common features: asynchronous support, PostgreSQL DBMS, SQLAlchemy ORM, Alembic migrations, Docker containerization, Pydantic type validation, basic user authorization and authentication with permission scopes. Project's core logic, including the base class implementations is isolated within the /core directory, while the application specific logic can be found inside the /app directory. 
 
-An example implementation for a messenger app backend can be found inside the /app directory. The app allows users to be created, authenticated and authorized via OAuth JWT Bearer authentication flow with basic access scopes (regular, admin and superuser). Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users.
+An example implementation for a messenger application can be found inside the /app directory. The app allows users to be created, authenticated and authorized via OAuth JWT Bearer authentication flow with basic access scopes (regular, admin and superuser). Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users.
 
-Project's layered architecture can be easily adapted and extended to any FastAPI service with very little effort.
+Project's layered architecture can easily be adapted and extended to any FastAPI service with very little effort.
 
 ## Technologies
 
@@ -54,7 +54,7 @@ python main.py
 docker compose -f launch.yml up
 ```
 
-NB If PostgreSQL is running on localhost and the project us launched inside Docker ensure POSTGRESQL_HOST=host.docker.internal inside .envs files (./envs/.production/.messenger).
+NB If PostgreSQL is running on localhost and the project is launched inside Docker ensure POSTGRESQL_HOST=host.docker.internal inside .envs files (./envs/.production/.messenger).
 
 If launched successfully Swagger UI documentation should become available at: `http://localhost:8080/docs`
 
@@ -64,20 +64,20 @@ API endpoints can be interacted with via `http://localhost:8080/api/` URLs.
 
 - /.envs - Environment variables.
 - /alembic - Alembic configuration and migration files.
-- /compose - Dockerfile as well as entrypoint and start command scripts.  
+- /compose - Dockerfile, entrypoint and start command scripts.  
 - /configs - Pydantic app configuration settings for the app, authentication and database.
-- /core - Core app functionality, including all of the base classes (e.g. base database controller and repository).
-- /app/ - Specific service logic with concrete class implementations (e.g. User database controller and repository).
+- /core - Core functionality, including the base class implementations (e.g. base database controller and repository).
+- /app - Application specific logic with concrete class implementations (e.g. User database controller and repository).
 - /routers/ - FastAPI API routers with all of the API endpoints.
 
 ## Architecture 
 
 The backend implements a layered architecture that combines multiple functional layers:
 
-- SQLAlchemy ORM model layer represent various data structures (e.g. users and messages).
-- FastAPI Routers layer acts as the main client interface for the API (i.e. views).
-- Database Controllers layer implements high-level data business logic.
-- Database Controller Services layer implements high-level cross-controller data business logic.
+- SQLAlchemy ORM Model layer implements the data structures (e.g. users and messages).
+- FastAPI Router layer acts as the main client interface for the API (i.e. views).
+- Database Controllers layer handles high-level data business logic.
+- Database Controller Services layer handles high-level cross-controller data business logic.
 - Database Repositories layer handles low-level data access and operations.
 
 ## Models 
@@ -92,4 +92,4 @@ All models are derived from a CommonBase that implements four default columns: i
 
 ## Authentication
 
-// TO DO
+// TO DO DESCRIPTION
