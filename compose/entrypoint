@@ -20,7 +20,7 @@ while True:
         )
         break
     except psycopg2.OperationalError as error:
-        sys.stderr.write("Waiting for PostgreSQL to become available...\n")
+        sys.stderr.write("PostgreSQL is not available, waiting...\n")
 
     time.sleep(1)
 END

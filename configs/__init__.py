@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 
 # Load .env variables
-load_dotenv(".envs/.production/.messenger")
+load_dotenv(".envs/.app")
 
 from .authentication import authentication_config
 from .database import database_config

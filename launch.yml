@@ -1,21 +1,21 @@
 version: '3'
 
 volumes:
-  messenger_postgres_data: {}
+  app_postgres_data: {}
 
 services:
-  messenger:
+  app:
     build:
       context: .
-      dockerfile: ./compose/production/messenger/Dockerfile
-    image: messenger_server
-    container_name: messenger_server
+      dockerfile: ./compose/Dockerfile
+    image: app_server
+    container_name: app_server
     restart: always
     volumes:
       - .:/app:z
     env_file:
-      - ./.envs/.production/.messenger
-    command: /messenger/start
+      - ./.envs/.app
+    command: /start
     ports:
       - "8080:8080"
     expose:
