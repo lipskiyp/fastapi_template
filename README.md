@@ -1,10 +1,12 @@
 # FastAPI Boilerplate
 
+Production-ready scalable asynchronous FastAPI backend template. 
+
 ## Overview
 
-This boilerplate project implements a scalable production-ready FastAPI backend template that supports a number of features out of the box: asynchronous support, PostgreSQL DBMS, SQLAlchemy ORM, Alembic migrations, Docker containerization, Pydantic type validation, basic user authorization and authentication with permission scopes. Project's core logic, including the base class implementations is isolated within the core directory, while the application specific logic can be found inside the app directory. 
+The aim of the project was to implement a scalable production-ready FastAPI template with out-of-the-box support for a number of common backend features: asynchronous support, PostgreSQL DBMS, SQLAlchemy ORM, Alembic migrations, Docker containerization, Pydantic type validation, basic user authorization and authentication with permission scopes. Project's core logic, including the base class implementations is isolated within the /core directory, while the application specific logic can be found inside the /app directory. 
 
-An example backend for a messenging app was implemented inside the app directory. New users can be created and authenticated via OAuth JWT Bearer authentication flow with basic access scopes (regular, admin and superuser). Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users.
+An example implementation for a messenger app backend can be found inside the /app directory. The app allows users to be created, authenticated and authorized via OAuth JWT Bearer authentication flow with basic access scopes (regular, admin and superuser). Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users.
 
 Project's layered architecture can be easily adapted and extended to any FastAPI service with very little effort.
 
