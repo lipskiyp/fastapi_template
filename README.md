@@ -68,7 +68,7 @@ API endpoints can be interacted with via `http://localhost:8080/api/` URLs.
 - /configs - Pydantic app configuration settings for the app, authentication and database.
 - /core - Core functionality, including the base class implementations (e.g. base database controller and repository).
 - /app - Application specific logic with concrete class implementations (e.g. User database controller and repository).
-- /routers/ - FastAPI API routers with all of the API endpoints.
+- /routers - FastAPI API routers with all of the API endpoints.
 
 ## Architecture 
 
