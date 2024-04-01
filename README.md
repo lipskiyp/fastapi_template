@@ -4,7 +4,7 @@ Production-ready scalable asynchronous FastAPI backend template.
 
 ## Overview
 
-The aim of the project was to implement a scalable production-ready FastAPI template with out-of-the-box support for a number of common features: asynchronous support, PostgreSQL DBMS, SQLAlchemy ORM, Alembic migrations, Docker containerization, Pydantic type validation, basic user authorization and authentication with permission scopes. Project's core logic, including the base class implementations is isolated within the /core directory, while the application specific logic can be found inside the /app directory. 
+The aim of the project was to implement a scalable production-ready FastAPI template with out-of-the-box support for a number of common features: asynchronous support, CRUD database controllers/repositories, PostgreSQL DBMS, SQLAlchemy ORM, Alembic migrations, Docker containerization, Pydantic type validation, basic user authorization and authentication with permission scopes. Project's core logic, including the base class implementations is isolated within the /core directory, while the application specific logic can be found inside the /app directory. 
 
 An example implementation for a messenger application can be found inside the /app directory. The app allows users to be created, authenticated and authorized via OAuth JWT Bearer authentication flow with basic access scopes (regular, admin and superuser). Authenticated users can create new multi-user message threads and send/receive messages to/from other users. Users with admin scopes are able to list and update other users.
 
