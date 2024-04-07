@@ -16,3 +16,4 @@ python-jose
 python-jose[cryptography]>
 python-multipart
 bcrypt
+redis
