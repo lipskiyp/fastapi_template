@@ -3,16 +3,19 @@ User database controller.
 """
 
 from datetime import timedelta
+from fastapi_filter.contrib.sqlalchemy import Filter
 from fastapi.security import OAuth2PasswordRequestForm
-from typing import Any
+from typing import Any, List
 
-from configs import authentication_config
-from core.authentication import create_token
+from app.cache import Cache
 from app.exceptions import UnauthorizedException
 from app.models import User
 from app.repositories import UserRepository
 from app.schemas import TokenCreateSchema
 from core.controllers import BaseController
+from core.authentication import create_token
+from configs import authentication_config
+from pydantic import TypeAdapter
 
 
 class UserController(BaseController):
@@ -24,6 +27,18 @@ class UserController(BaseController):
         self, repository: UserRepository
     ) -> None:
         super().__init__(model=User, repository=repository)
+
+
+    @Cache.cached(
+        adapter=TypeAdapter(List[User])
+    )
+    async def list_users_filter(
+        self, filters: Filter, a: int
+    ) -> List[User]:
+        """
+        Get filtered list of Users using FastAPI Filter.
+        """
+        return await self.list_filter(filters=filters)
 
 
     async def create_user(

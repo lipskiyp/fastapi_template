@@ -82,10 +82,10 @@ async def get_authenticated_user(
     "/",
     summary="List users.",
     tags=["users"],
-    dependencies=[
-        # requires authenticated user with users:admins scopes
-        Security(get_current_active_user, scopes=["users:admin"])   
-    ]   
+    #dependencies=[
+    #    # requires authenticated user with users:admins scopes
+    #    Security(get_current_active_user, scopes=["users:admin"])   
+    #]   
 )
 async def list_users(
     filters: Filter = FilterDepends(UserFilter), 
@@ -96,7 +96,7 @@ async def list_users(
     """
     Returns a list of users.
     """
-    return await controller.list_filter(filters=filters)
+    return await controller.list_users_filter(filters, a=1)
 
 
 @router.get(

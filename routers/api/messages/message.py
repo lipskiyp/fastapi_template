@@ -7,7 +7,6 @@ from uuid import UUID
 
 from app.controllers import MessageController
 from app.dependencies.authentication import get_current_active_user
-from app.exceptions import UnauthorizedException
 from app.factories.controllers import ControllerFactory
 from app.services.controllers import MessageControllerService
 from app.models import User
