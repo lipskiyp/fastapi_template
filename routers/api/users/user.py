@@ -6,9 +6,11 @@ from fastapi import APIRouter, Depends, status, Security
 from fastapi_filter import FilterDepends
 from fastapi_filter.contrib.sqlalchemy import Filter
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import TypeAdapter
 from typing import List
 from uuid import UUID 
 
+from app.cache import Cache
 from app.controllers import UserController
 from app.dependencies.authentication import get_current_active_user
 from app.exceptions import UnauthorizedException
@@ -87,6 +89,9 @@ async def get_authenticated_user(
     #    Security(get_current_active_user, scopes=["users:admin"])   
     #]   
 )
+@Cache.cached(
+    adapter=TypeAdapter(List[UserResponseSchema])
+)
 async def list_users(
     filters: Filter = FilterDepends(UserFilter), 
     controller: UserController = Depends(
@@ -96,7 +101,7 @@ async def list_users(
     """
     Returns a list of users.
     """
-    return await controller.list_users_filter(filters, a=1)
+    return await controller.list_filter(filters)
 
 
 @router.get(

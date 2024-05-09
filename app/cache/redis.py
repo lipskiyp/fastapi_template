@@ -81,9 +81,19 @@ class RedisClient:
             raise REDIS_CONNECTION_ERROR
         
 
-    async def clear(
-        self
-    ):
+
+    async def list_keys(self):
+        """
+        List all Redis cache keys.
+        """
+        try:
+            return await self.session.keys(pattern="*")
+        
+        except ConnectionError:
+            raise REDIS_CONNECTION_ERROR
+        
+
+    async def flush(self):
         """
         Clear Redis database.
         """

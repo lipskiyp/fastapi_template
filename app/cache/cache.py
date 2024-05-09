@@ -2,7 +2,6 @@
 Cache client.
 """
 
-import json
 from functools import wraps
 from pydantic import TypeAdapter
 from typing import Callable, Optional
@@ -21,7 +20,7 @@ class CacheClient:
         """
         Initialise cache client.
         """
-        self.client = RedisClient()
+        self.client = RedisClient()  # Change to use another client for cache.
 
 
     def cached(
@@ -34,13 +33,14 @@ class CacheClient:
             @wraps(func)
             async def wrapper(*args, **kwargs):
                 # Generate cache key
-                # await self.client.clear()
+                #await self.client.flush()
                 key = self._key(func, *args, **kwargs)
 
                 # Return cache if exists already 
                 if await self.client.exists(key):
-                    if cache := await self.client.get(key) and adapter:
-                        print(cache)
+                    cache = await self.client.get(key)
+
+                    if cache and adapter:
                         return adapter.validate_json(cache)
                     
                     elif cache:
@@ -68,10 +68,13 @@ class CacheClient:
         """
         Generate standardized cache key.
         """
+        print(args)
+        print(kwargs)
+
         key = f"{inspect.getmodule(func).__name__}.{func.__name__}"
 
-        for key, value in kwargs.items():
-            key += f"{key}:{value}"
+        #for k, v in kwargs.items():
+        #    key += f"{k}:{v}"
 
         return key
     
