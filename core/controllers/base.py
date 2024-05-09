@@ -77,15 +77,16 @@ class BaseController(Generic[ModelType]):
     
 
     async def update_by(
-        self, request: dict[str, Any], update_by: dict[str, Any]
+        self, request: dict[str, Any], update_by: dict[str, Any], ignore_none: bool = True
     ) -> ModelType:
         """
         Updates and returns model object.
         """
         model_obj = await self.get_by(get_by=update_by)
         for key, value in request.items():
-            if value is not None:
-                setattr(model_obj, key, value)
+            if ignore_none and value is None:
+                continue
+            setattr(model_obj, key, value)
         try:
             return await self.repository.create(model_obj)
         except IntegrityError as e:
